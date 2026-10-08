@@ -4,9 +4,9 @@
 @{
 }
 
+@if(TempData["message"] != null)
+{
+    <h1>@TempData["message"]</h1>
+}
 
-<h1>
 
-@TempData["message"]
-
-</h1>
