@@ -15,6 +15,20 @@ namespace DataAccess.Context
     public class LibraryDbContext : IdentityDbContext<IdentityUser>
     {
         /* 
+         *Steps to create the database
+         *Preparation: install all the required dependencies from NuGet particularly Microsoft.EntityFrameworkCore.Tools
+         *1. Compile the entire solution and check that there are errors in the code
+         *2. You have to set up the web application as the startup project
+         *3. Open the package manager console window from Tools -> Nuget Package Manager -> Package Manager Console
+         *4. Select as a default project in a drop-down in package manager console window: DataAccess
+         *5. add-migration "InitialMigration" -context [press tab] select Library DbContext
+         *6. Check the migration class
+         *7. update-database -context [press tab] select LibraryDbContext
+         *
+         *Note: If you add a new model/add new properties/change anything which was created so far,
+         *you need to repeat the steps above
+         *
+        /* 
          *What is the role of this context class?
          *This is an abstraction of the database
          *In other words a database represented as a class
