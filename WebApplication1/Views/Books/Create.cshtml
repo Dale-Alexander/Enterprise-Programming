@@ -1,0 +1,84 @@
+﻿@model Common.Models.Book
+
+@{
+    ViewData["Title"] = "Create Book";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0"><i class="bi bi-book"></i> Add New Book</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="/Book/Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- ISBN Field -->
+                        <div class="mb-3">
+                            <label asp-for="Isbn" class="form-label fw-bold">ISBN</label>
+                            <input asp-for="Isbn" class="form-control" placeholder="e.g., 978-0-12-409341-3" maxlength="17" />
+                            <span asp-validation-for="Isbn" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Title Field -->
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Book Title</label>
+                            <input asp-for="Title" class="form-control" placeholder="Enter the full title of the book" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <!-- Published Year Field -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PublishedYear" class="form-label fw-bold">Published Year</label>
+                                <input asp-for="PublishedYear" type="number" class="form-control" placeholder="e.g., 2024" />
+                                <span asp-validation-for="PublishedYear" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Author Field -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Author" class="form-label fw-bold">Author (Optional)</label>
+                                <input asp-for="Author" class="form-control" placeholder="Enter author's name" />
+                                <span asp-validation-for="Author" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Category Dropdown Field -->
+                        <div class="mb-3">
+                            <label asp-for="CategoryFK" class="form-label fw-bold">Category</label>
+                            <select asp-for="CategoryFK" class="form-select" asp-items="ViewBag.Categories">
+                                <option value="" selected disabled>-- Select a Category --</option>
+                            </select>
+                            <span asp-validation-for="CategoryFK" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Available Checkbox Field -->
+                        <div class="mb-4 form-check form-switch">
+                            <input asp-for="Available" class="form-check-input" type="checkbox" role="switch" id="AvailableSwitch" checked>
+                            <label class="form-check-label fw-bold" for="AvailableSwitch">Available for Rent</label>
+                            <span asp-validation-for="Available" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-check-circle"></i> Save Book
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

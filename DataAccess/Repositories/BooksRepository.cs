@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DataAccess.Repositories
 {
@@ -25,10 +27,30 @@ namespace DataAccess.Repositories
         public IQueryable<Book> GetBooks() {
             return _context.Books;
         }
+        public IQueryable<Book> GetBooks(string keyword)
+        {
+            return GetBooks().Where(b => b.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+        }
+        public IQueryable<Book> GetBooks(string keyword, int pageSize, int startAt)
+        {
+            return GetBooks(keyword).Skip(startAt).Take(pageSize);
+        }
 
-        public void Addbook(Book b)
+        public void AddBook(Book b)
         {
             _context.Books.Add(b);
+            _context.SaveChanges();
         }
+        //public async Task<Book> GetBook(string isbn)
+        //{
+        //    if (string.IsNullOrEmpty(isbn))
+        //    {
+        //        throw new Exception();
+        //    }
+        //    var book = await _context.Books.FirstOrDefaultAsync(b => b.Isbn == isbn);
+        //    if(book == null{
+        //        throw new BadRequestException(new {message = ""})
+        //    }
+        //}
     }
 }
