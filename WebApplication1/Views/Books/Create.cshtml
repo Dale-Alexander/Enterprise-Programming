@@ -1,4 +1,5 @@
-﻿@model Common.Models.Book
+﻿@using Common.Models
+@model Common.Models.Book
 
 @{
     ViewData["Title"] = "Create Book";
@@ -12,7 +13,7 @@
                     <h3 class="card-title mb-0"><i class="bi bi-book"></i> Add New Book</h3>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-action="/Book/Create" method="post">
+                    <form asp-action="/Books/Create" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <!-- ISBN Field -->
@@ -48,7 +49,8 @@
                         <!-- Category Dropdown Field -->
                         <div class="mb-3">
                             <label asp-for="CategoryFK" class="form-label fw-bold">Category</label>
-                            <select asp-for="CategoryFK" class="form-select" asp-items="ViewBag.Categories">
+                            <select asp-for="CategoryFK" class="form-select"
+                                    asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))">
                                 <option value="" selected disabled>-- Select a Category --</option>
                             </select>
                             <span asp-validation-for="CategoryFK" class="text-danger small"></span>

@@ -16,11 +16,19 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<LibraryDbContext>();
 builder.Services.AddControllersWithViews();
 
-/* Transient
- * Singleton 
- * Scoped*/
+/* Transient - it creates an instance for every call. This means that in the Bookscontroller Create function,
+ * the repository will be created twice because you are checking if the book exists and then you are using 
+ * it to add the book if it does exist
+ * 
+ * Singleton - this creates ONE instance for all users, calls, requests etc
+ * 
+ * Scoped (most commonly used) - it creates ONE instance for every request
+ *                               ex: end-user => /Books/create => 1. checks whether books exist 2. adds the book
+ */
 builder.Services.AddScoped<BooksRepository>();
-//vuilder.Services.AddScoped(typeof(BooksRepository)); You can do this aswell but the above is easier
+
+builder.Services.AddScoped<CategoriesRepository>(); 
+//builder.Services.AddScoped(typeof(BooksRepository)); You can do this aswell but the above is easier
 
 var app = builder.Build();
 

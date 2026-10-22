@@ -14,9 +14,12 @@ namespace WebApplication1.Controllers
 
 
         private readonly BooksRepository _booksRepository;
-        public BooksController(BooksRepository booksRepository)
+        private readonly CategoriesRepository _categoriesRepository;
+
+        public BooksController(BooksRepository booksRepository, CategoriesRepository categoriesRepository)
         {
             _booksRepository = booksRepository;
+            _categoriesRepository = categoriesRepository;
         }
         /* 
          *Constructor injection is good because you dont have to instantiate
@@ -28,6 +31,8 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            //viewBag is dynamic / not strongly typed
+            ViewBag.Categories = _categoriesRepository.GetCategories();
             return View();
         }
 
@@ -36,14 +41,24 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                _booksRepository.AddBook(b);
-                TempData["message"] = "Book added successfully";
+                var count = _booksRepository.GetBooks().Where(x => x.Isbn == b.Isbn).Count();
+                if (count == 0){
+                    _booksRepository.AddBook(b);
+                    ModelState.Clear();
+                    TempData["message"] = "Book added successfully";
+                }
+                else
+                {
+                    TempData["error"] = "Book already exists";
+                }
+                //tempdata survives navigation unlike viewdata
             }
             catch(Exception ex)
             {
                 //log ex into a file or cloud
                 TempData["error"] = "Book was not added. Check your inputs";
             }
+            ViewBag.Categories = _categoriesRepository.GetCategories();
             return View();//redirecting the user back to the page where he came from
         }
 
