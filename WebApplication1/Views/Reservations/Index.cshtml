@@ -1,0 +1,151 @@
+﻿
+
+@model IEnumerable<Common.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Reservations";
+}
+
+<div class="container mt-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">
+                <i class="bi bi-journal-bookmark"></i> Reservations
+            </h2>
+            <p class="text-muted mb-0">Manage all book reservations</p>
+        </div>
+
+        <a href="/Reservations/SelfBorrow" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> New Reservation
+        </a>
+    </div>
+
+    <!-- Reservations Table -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-semibold">Reservation Records</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Book</th>
+                            <th>Username</th>
+                            <th>Date Taken</th>
+                            <th>Date Due</th>
+                            <th>Date Returned</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.Id</td>
+
+                                    <td>
+                                        <span class="fw-semibold">
+                                            @(item.Book != null ? item.Book.Title : item.BookFK)
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <i class="bi bi-person-circle text-secondary"></i>
+                                        @item.Username
+                                    </td>
+
+                                    <td>
+                                        @item.DateTaken.ToString("dd MMM yyyy")
+                                    </td>
+
+                                    <td>
+                                        @item.DateDue.ToString("dd MMM yyyy")
+                                    </td>
+
+                                    <td>
+                                        @(item.DateReturned.HasValue
+                                            ? item.DateReturned.Value.ToString("dd MMM yyyy")
+                                            : "Not returned")
+                                    </td>
+
+                                    <td>
+                                        @if (item.DateReturned.HasValue)
+                                        {
+                                            <span class="badge bg-success">
+                                                Returned
+                                            </span>
+                                        }
+                                        else if (item.DateDue.Date < DateTime.Today)
+                                        {
+                                            <span class="badge bg-danger">
+                                                Overdue
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                Borrowed
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-outline-info"
+                                               title="Details">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+
+                                            <a asp-action="Edit"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-outline-primary"
+                                               title="Edit">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+
+                                            <a asp-action="Delete"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-outline-danger"
+                                               title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center py-5">
+                                    <i class="bi bi-inbox display-4 text-muted"></i>
+                                    <p class="text-muted mt-2 mb-0">
+                                        No reservations found.
+                                    </p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white text-muted">
+            Total Reservations:
+            <strong>@(Model?.Count() ?? 0)</strong>
+        </div>
+    </div>
+</div>
