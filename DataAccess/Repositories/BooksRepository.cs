@@ -93,7 +93,10 @@ namespace DataAccess.Repositories
             {
                 originalBook.Author = b.Author;
                 originalBook.Title = b.Title;
-                //...
+                originalBook.PublishedYear = b.PublishedYear;
+                originalBook.CategoryFK = b.CategoryFK;
+                originalBook.Available = b.Available;
+                originalBook.Cover = b.Cover;
 
                 originalBook.Cover = b.Cover;
 

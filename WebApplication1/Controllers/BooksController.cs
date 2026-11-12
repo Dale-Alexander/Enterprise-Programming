@@ -140,7 +140,9 @@ namespace WebApplication1.Controllers
         {
             try
             {
+                Console.WriteLine(b.Isbn);
                 var count = _booksRepository.GetBooks().Where(x => x.Isbn == b.Isbn).Count();
+                
                 if (count == 1)
                 {
                     if (file != null)

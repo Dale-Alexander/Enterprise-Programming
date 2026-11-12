@@ -124,6 +124,7 @@
                         Current Cover Photo:
                     </label>
 
+                    <input type="hidden" asp-for="Cover" />
                     @if (!string.IsNullOrEmpty(Model.Cover))
                     {
                         <div class="mb-2">
