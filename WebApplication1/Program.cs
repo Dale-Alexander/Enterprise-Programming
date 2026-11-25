@@ -4,6 +4,7 @@ using DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
+using WebApplication1.Factory;
 using WebApplication1.Services.BookingPolicies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,7 @@ builder.Services.AddScoped<ReservationsRepository>();
 
 builder.Services.AddKeyedScoped<IBookingPolicy, SummerBookingPolicy>("summer");
 builder.Services.AddKeyedScoped<IBookingPolicy, WinterBookingPolicy>("winter");
+builder.Services.AddScoped<NotificationFactory>(); 
 //You could have used the same for BooksRepository but he did for teaching purposes but in reality you dont need both data sources at the same time aswell
 
 

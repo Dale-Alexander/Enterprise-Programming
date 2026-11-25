@@ -3,6 +3,7 @@ using DataAccess.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using WebApplication1.Factory;
 
 namespace WebApplication1.Controllers
 {
@@ -35,7 +36,7 @@ namespace WebApplication1.Controllers
         }
         [HttpPost]
 
-        public IActionResult SelfBorrow(Reservation r)
+        public IActionResult SelfBorrow(Reservation r, [FromServices] NotificationFactory nf)
         {
 
             if(_booksRepository.GetBook(r.BookFK) == null)
@@ -43,11 +44,7 @@ namespace WebApplication1.Controllers
                 TempData["error"] = "Book doesn't exist";
                 return RedirectToAction("Index");
             }
-            if(_reservationsRepository.GetReservations().Where(x => x.DateReturned == null && x.BookFK == r.BookFK).Count() == 1)
-            {
-                TempData["error"] = "Book cannot be borrowed at the moment";
-                return RedirectToAction("Index");
-            }
+
             r.DateTaken = DateTime.Now;
             r.Username = User.Identity.Name;
             r.DateReturned = null;
@@ -59,7 +56,21 @@ namespace WebApplication1.Controllers
             {
                 r.DateDue = _wp.CalculateDueDate(r.DateTaken);
             }
+
+
+            var notificationStrategy = nf.Create(_reservationsRepository, r);
+            notificationStrategy.Notify(User.Identity.Name, "adminEmail@ourlibrary.com",
+                $"Name of Book {r.Book.Title}, Date attempted: {r.DateTaken.ToShortDateString()}");
+
+            if (_reservationsRepository.GetReservations().Where(x => x.DateReturned == null && x.BookFK == r.BookFK).Count() == 1)
+            {
+                TempData["error"] = "Book cannot be borrowed at the moment";
+                return RedirectToAction("Index");
+            }
+
             _reservationsRepository.ReserveBook(r);
+
+
             TempData["message"] = "Reservation Saved";
             return RedirectToAction("Index");
         }
